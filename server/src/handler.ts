@@ -1,14 +1,5 @@
 import { Request, Response } from 'express';
-
-type Task = {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-};
-
-let tasks: Task[] = [];
-let nextId = 1;
+import * as taskModel from './models/task';
 
 export function createTask(req: Request, res: Response) {
   const { title, description, completed } = req.body;
@@ -18,13 +9,11 @@ export function createTask(req: Request, res: Response) {
     return;
   }
 
-  const task: Task = {
-    id: nextId++,
-    title: title.trim(),
-    description: description?.trim() || '',
-    completed: typeof completed === 'boolean' ? completed : false,
-  };
+  const task = taskModel.add(
+    title.trim(),
+    description?.trim() || '',
+    typeof completed === 'boolean' ? completed : false
+  );
 
-  tasks.push(task);
   res.status(201).json(task);
 }
