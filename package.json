@@ -2,12 +2,14 @@
   "name": "pruebaweb",
   "private": true,
   "scripts": {
-    "client": "npm start --prefix client",
+    "client": "npm run dev --prefix client",
     "server": "npm run dev --prefix server",
+    "dev": "concurrently -n client,server -c cyan,green \"npm run client\" \"npm run server\"",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "devDependencies": {
+    "concurrently": "^9.1.0",
     "eslint": "^8.56.0",
     "prettier": "^3.2.0"
   }
