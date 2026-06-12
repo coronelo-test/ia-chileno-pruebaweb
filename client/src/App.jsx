@@ -1,5 +1,80 @@
-function App() {
-  return <h1>Hola Mundo</h1>
-}
+import { useState, useEffect, useCallback } from 'react'
+import SearchBar from './SearchBar'
+import TaskForm from './TaskForm'
+import TaskList from './TaskList'
 
-export default App
+const API = '/api/tasks'
+
+export default function App() {
+  const [tasks, setTasks] = useState([])
+  const [editingTask, setEditingTask] = useState(null)
+
+  useEffect(() => {
+    async function load() {
+      const res = await fetch(API)
+      if (res.ok) setTasks(await res.json())
+    }
+    load()
+  }, [])
+
+  const fetchTasks = useCallback(async (q) => {
+    const url = q ? `${API}?q=${encodeURIComponent(q)}` : API
+    const res = await fetch(url)
+    if (res.ok) setTasks(await res.json())
+  }, [])
+
+  async function handleSearch(q) {
+    await fetchTasks(q)
+  }
+
+  async function handleCreate(data) {
+    await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    await fetchTasks()
+  }
+
+  async function handleUpdate(id, data) {
+    await fetch(`${API}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    setEditingTask(null)
+    await fetchTasks()
+  }
+
+  async function handleToggle(id, completed) {
+    await handleUpdate(id, { completed })
+  }
+
+  async function handleDelete(id) {
+    await fetch(`${API}/${id}`, { method: 'DELETE' })
+    await fetchTasks()
+  }
+
+  return (
+    <div>
+      <h1>Gestión de Tareas</h1>
+      <SearchBar onSearch={handleSearch} />
+      <TaskForm
+        key={editingTask ? editingTask.id : 'new'}
+        onSave={(data) =>
+          editingTask
+            ? handleUpdate(editingTask.id, data)
+            : handleCreate(data)
+        }
+        editingTask={editingTask}
+        onCancelEdit={() => setEditingTask(null)}
+      />
+      <TaskList
+        tasks={tasks}
+        onToggle={handleToggle}
+        onEdit={setEditingTask}
+        onDelete={handleDelete}
+      />
+    </div>
+  )
+}

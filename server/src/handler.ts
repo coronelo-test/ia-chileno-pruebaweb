@@ -18,8 +18,18 @@ export function createTask(req: Request, res: Response) {
   res.status(201).json(task);
 }
 
-export function listTasks(_req: Request, res: Response) {
+export function listTasks(req: Request, res: Response) {
   const tasks = taskModel.getAll();
+  const q = (req.query.q as string || '').toLowerCase();
+  if (q) {
+    const filtered = tasks.filter(
+      (t) =>
+        t.title.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q)
+    );
+    res.json(filtered);
+    return;
+  }
   res.json(tasks);
 }
 
