@@ -17,3 +17,52 @@ export function createTask(req: Request, res: Response) {
 
   res.status(201).json(task);
 }
+
+export function listTasks(_req: Request, res: Response) {
+  const tasks = taskModel.getAll();
+  res.json(tasks);
+}
+
+export function getTask(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const task = taskModel.getById(id);
+  if (!task) {
+    res.status(404).json({ error: 'tarea no encontrada' });
+    return;
+  }
+  res.json(task);
+}
+
+export function updateTask(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const { title, description, completed } = req.body;
+
+  if (title !== undefined && title.trim() === '') {
+    res.status(400).json({ error: 'title no puede estar vacío' });
+    return;
+  }
+
+  const existing = taskModel.getById(id);
+  if (!existing) {
+    res.status(404).json({ error: 'tarea no encontrada' });
+    return;
+  }
+
+  const updated = taskModel.update(id, {
+    ...(title !== undefined && { title: title.trim() }),
+    ...(description !== undefined && { description: description.trim() }),
+    ...(completed !== undefined && { completed }),
+  });
+
+  res.json(updated);
+}
+
+export function deleteTask(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const removed = taskModel.remove(id);
+  if (!removed) {
+    res.status(404).json({ error: 'tarea no encontrada' });
+    return;
+  }
+  res.json({ message: 'tarea eliminada' });
+}
