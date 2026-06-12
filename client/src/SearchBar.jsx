@@ -1,11 +1,13 @@
 import { useState } from 'react'
+import useTaskStore from './store/taskStore'
 
-export default function SearchBar({ onSearch }) {
+export default function SearchBar() {
   const [value, setValue] = useState('')
+  const fetchTasks = useTaskStore((s) => s.fetchTasks)
 
   function handleSubmit(e) {
     e.preventDefault()
-    onSearch(value)
+    fetchTasks(value)
   }
 
   return (
@@ -18,7 +20,7 @@ export default function SearchBar({ onSearch }) {
       />
       <button type="submit">Buscar</button>
       {value && (
-        <button type="button" onClick={() => { setValue(''); onSearch('') }}>
+        <button type="button" onClick={() => { setValue(''); fetchTasks('') }}>
           Limpiar
         </button>
       )}

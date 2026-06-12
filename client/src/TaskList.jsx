@@ -1,4 +1,11 @@
-export default function TaskList({ tasks, onToggle, onEdit, onDelete }) {
+import useTaskStore from './store/taskStore'
+
+export default function TaskList() {
+  const tasks = useTaskStore((s) => s.tasks)
+  const toggleTask = useTaskStore((s) => s.toggleTask)
+  const setEditingTask = useTaskStore((s) => s.setEditingTask)
+  const deleteTask = useTaskStore((s) => s.deleteTask)
+
   if (tasks.length === 0) {
     return <p>No hay tareas.</p>
   }
@@ -11,13 +18,13 @@ export default function TaskList({ tasks, onToggle, onEdit, onDelete }) {
             <input
               type="checkbox"
               checked={task.completed}
-              onChange={() => onToggle(task.id, !task.completed)}
+              onChange={() => toggleTask(task.id, !task.completed)}
             />
             <strong>{task.title}</strong>
           </label>
           {task.description && <p>{task.description}</p>}
-          <button onClick={() => onEdit(task)}>Editar</button>
-          <button onClick={() => onDelete(task.id)}>Eliminar</button>
+          <button onClick={() => setEditingTask(task)}>Editar</button>
+          <button onClick={() => deleteTask(task.id)}>Eliminar</button>
         </li>
       ))}
     </ul>
