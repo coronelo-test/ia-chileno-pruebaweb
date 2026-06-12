@@ -10,15 +10,11 @@ export default function App() {
   const [editingTask, setEditingTask] = useState(null)
 
   useEffect(() => {
-    async function load() {
-      const res = await fetch(API)
-      if (res.ok) setTasks(await res.json())
-    }
-    load()
+    fetch(API).then((r) => r.ok && r.json()).then((data) => data && setTasks(data))
   }, [])
 
   const fetchTasks = useCallback(async (q) => {
-    const url = q ? `${API}?q=${encodeURIComponent(q)}` : API
+    const url = q ? `${API}/search?q=${encodeURIComponent(q)}` : API
     const res = await fetch(url)
     if (res.ok) setTasks(await res.json())
   }, [])

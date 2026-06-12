@@ -2,6 +2,7 @@ import express from 'express';
 import {
   createTask,
   listTasks,
+  searchTasks,
   getTask,
   updateTask,
   deleteTask,
@@ -17,6 +18,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.get('/api/tasks', listTasks);
+app.get('/api/tasks/search', searchTasks);
 app.get('/api/tasks/:id', getTask);
 app.post('/api/tasks', createTask);
 app.put('/api/tasks/:id', updateTask);

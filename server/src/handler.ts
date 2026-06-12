@@ -18,18 +18,21 @@ export function createTask(req: Request, res: Response) {
   res.status(201).json(task);
 }
 
-export function listTasks(req: Request, res: Response) {
-  const tasks = taskModel.getAll();
+export function listTasks(_req: Request, res: Response) {
+  res.json(taskModel.getAll());
+}
+
+export function searchTasks(req: Request, res: Response) {
   const q = (req.query.q as string || '').toLowerCase();
-  if (q) {
-    const filtered = tasks.filter(
-      (t) =>
-        t.title.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q)
-    );
-    res.json(filtered);
+  if (!q) {
+    res.json([]);
     return;
   }
+  const tasks = taskModel.getAll().filter(
+    (t) =>
+      t.title.toLowerCase().includes(q) ||
+      t.description.toLowerCase().includes(q)
+  );
   res.json(tasks);
 }
 

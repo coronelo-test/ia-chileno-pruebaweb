@@ -35,7 +35,7 @@ All under `/api/...` (dev: Vite proxy → `http://localhost:4000/api/...`)
 | Método | Ruta       | Body (json)                            | Respuesta éxito     | Errores    |
 | ------ | ---------- | -------------------------------------- | ------------------- | ---------- |
 | GET    | /tasks     | —                                      | `200` `Task[]`      | —          |
-| GET    | /tasks?q= | —                                      | `200` `Task[]`      | —          |
+| GET    | /tasks/search?q= | —                                | `200` `Task[]`      | —          |
 | GET    | /tasks/:id | —                                      | `200` `Task`        | `404`      |
 | POST   | /tasks     | `{ title, description?, completed? }`  | `201` `Task`        | `400`      |
 | PUT    | /tasks/:id | `{ title?, description?, completed? }` | `200` `Task`        | `400, 404` |
