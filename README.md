@@ -20,8 +20,9 @@ Aplicación web con frontend en React (Vite) y backend en Express + TypeScript.
 ## Scripts
 
 ```bash
-npm run client   # Inicia el frontend
-npm run server   # Inicia el backend
+npm run client   # Inicia frontend React (Vite) en http://localhost:5173
+npm run server   # Inicia backend Express (tsx watch) en http://localhost:4000
+npm run dev      # Inicia ambos simultáneamente con concurrently
 npm run format   # Formatea el código con Prettier
 npm run lint     # Ejecuta ESLint
 ```
